@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+  - portage:
+      package: net-misc/ntp
+  - shell: ntpdate "{{ server | default('time.lon3.rackspace.com') }}"

@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+  - setup:
+  - shell: echo {{ ansible_hostname }}

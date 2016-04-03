@@ -1,0 +1,97 @@
+---
+- hosts: all
+  tasks:
+
+  - name: create SDK owner "esdk"
+    user:
+      name:  esdk
+      state: present
+
+  - name: create SDK working directory "/opt/adapteva"
+    file:
+      path:  /opt/adapteva
+      state: directory
+      owner: esdk
+      group: esdk
+
+  #- template:
+  #    dest: /etc/portage/repos.conf/gentoo.conf
+  #    src:  templates/repos.conf
+
+  - name: install required build packages
+    portage:
+      package: "{{ item }}"
+    with_items:
+    - dev-vcs/git
+    - dev-scheme/guile
+
+  - name: install some cool tools
+    portage:
+      package: "{{ item }}"
+    with_items:
+    - distcc
+    - gdb
+    - strace
+
+  - name: distcc override
+    lineinfile: line="[Service]" insertbefore=BOF create=yes name=/etc/systemd/system/distcc.service.d/override.conf
+  - name: distcc override allowed_servers
+    lineinfile: line='Environment="ALLOWED_SERVERS=192.168.2.0/24 ::"' name=/etc/systemd/system/distccd.service.d/override.conf regexp=ALLOWED insertafter=EOF
+  - shell: systemctl daemon-reload; systemctl restart distccd
+  - name: distcc working host ips
+    shell: lsdistcc -n {{ item }}
+    with_items:
+    - ella0
+    - ella1
+    - ella2
+    - ella3
+    register: hosts
+  - name: distcc set-hosts
+    shell: distcc-config --set-hosts "{{ hosts }}"
+
+  #- name: permissions for "/dev/epiphany"
+  #  file:
+  #    path: /dev/epiphany
+  #    mode: 0777
+
+- hosts: all
+  become: yes
+  become_method: su
+  become_user: esdk
+  tasks:
+
+  - name: clone SDK build scripts
+    git:
+      dest: /opt/adapteva/sdk
+      repo: git://github.com/adapteva/epiphany-sdk
+      version: "2015.1"
+
+  #- name: unpack sdk component sources
+  #  unarchive: src=sdk-components.tar.xz dest=/opt/adapteva owner=esdk group=esdk
+  #  args:
+  #    creates: /opt/adapteva/gdb
+
+  - name: configure gcc gmp to use m4
+    shell: sed -i -e '/M4=m4-not-needed/s/-not-needed//' /opt/adapteva/gcc-infrastructure/gmp/configure*
+    ignore_errors: yes
+
+  - name: build the eSDK via scripts
+    #shell: ./sdk/build-epiphany-sdk.sh -C -j 3 -e armv7a-hardfloat-linux-gnueabi -c armv7a-hardfloat-linux-gnueabi
+    shell: ./sdk/build-epiphany-sdk.sh -C -d -R -e armv7a-hardfloat-linux-gnueabi -a armv7a
+    args:
+        chdir: /opt/adapteva
+        creates: /opt/adapteva/esdk/setup.sh
+
+  - name: fixup host tools
+    file:
+      path: /opt/adapteva/esdk/tools/host
+      src:  host.armv7l
+
+  - name: clone examples dir
+    git:
+      dest: /opt/adapteva/examples
+      repo: https://github.com/adapteva/epiphany-examples.git
+
+  - name: fix examples compiler
+    shell: sed -i -e '/CROSS_PREFIX=/s/arm-linux-gnueabihf-/armv7a-hardfloat-linux-gnueabi-/' /opt/adapteva/examples/*/*/build.sh
+

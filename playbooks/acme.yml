@@ -1,0 +1,27 @@
+---
+- hosts: all
+  tasks:
+  - portage:
+      package: www-servers/nginx
+  - portage:
+      package: dev-lang/go
+  - user: acme
+  - file:
+      path:  /var/lib/acme
+      state: directory
+      owner: acme
+      group: acme
+  - file:
+      path:  /var/run/acme
+      state: directory
+      owner: acme
+      group: acme
+
+- hosts: all
+  become: yes
+  become_user: acme
+  become_method: su
+  tasks:
+  - shell: go get github.com/hlandau/acme/cmd/acmetool
+    environment:
+      GOPATH: /home/acme/.local/go

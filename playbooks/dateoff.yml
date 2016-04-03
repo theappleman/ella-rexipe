@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - template:
+      src: templates/date-save.start
+      dest: /etc/local.d/date.start
+      mode: 0744
+  - template:
+      src: templates/date-save.stop
+      dest: /etc/local.d/date.stop
+      mode: 0744
+

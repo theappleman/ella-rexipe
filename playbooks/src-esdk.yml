@@ -1,0 +1,47 @@
+---
+- hosts: all
+  tasks:
+
+  - file: name=/usr/src/esdk state=directory
+
+  - unarchive: src=bare.tar.xz dest=/usr/src/esdk owner=root group=root creates=/usr/src/esdk/binutils-gdb
+
+  - git: repo=https://github.com/adapteva/epiphany-{{ item }}
+         dest=/usr/src/esdk/{{ item }}
+         bare=yes
+         update=yes
+         clone=no
+    with_items:
+    - gcc
+    - binutils-gdb
+    - newlib
+    - cgen
+    - sdk
+
+- hosts: all
+  become: yes
+  become_method: su
+  become_user: esdk
+  tasks:
+
+  #- unarchive: src=sdk-components.tar.xz dest=/opt/adapteva owner=esdk group=esdk creates=/opt/adapteva/gdb
+
+  - git: repo=https://github.com/adapteva/epiphany-{{ item.repo }}
+         reference=/usr/src/esdk/{{ item.repo }}
+         dest=/opt/adapteva/{{ item.name }}
+         version={{ item.branch }}
+         update=yes
+    with_items:
+    #- { repo: gcc, name: gcc, branch: epiphany-gcc-5 }
+    #- { repo: binutils-gdb, name: binutils, branch: epiphany-binutils-2.25 }
+    #- { repo: binutils-gdb, name: gdb, branch: epiphany-gdb-7.10 }
+    #- { repo: newlib, name: newlib, branch: epiphany-newlib-2.2.0 }
+    #- { repo: cgen, name: cgen, branch: epiphany-cgen-1.1-newabi }
+    #- { repo: sdk, name: sdk, branch: master }
+
+    - { repo: gcc, name: gcc, branch: epiphany-gcc-4.8-software-cache }
+    - { repo: binutils-gdb, name: binutils, branch: epiphany-binutils-2.23-software-cache }
+    - { repo: binutils-gdb, name: gdb, branch: epiphany-gdb-7.6 }
+    - { repo: newlib, name: newlib, branch: epiphany-newlib-1.20-software-cache }
+    - { repo: cgen, name: cgen, branch: epiphany-cgen-1.1-software-cache }
+    - { repo: sdk, name: sdk, branch: 2015.1 }
