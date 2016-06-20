@@ -1,1 +1,1 @@
-ella[0:3]	ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python2
+ella[0:3].0xdc.host	ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python2
