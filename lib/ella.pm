@@ -12,8 +12,10 @@ task "systemd", group => 'servers', make {
 	if ( is_installed("systemd") ) {
 		say "systemd is installed";
 	} else {
-		pkg "sys-fs/udev", ensure => "absent";
-		pkg "virtual/udev", ensure => "absent";
+		if (is_installed("sys-fs/udev")) {
+			pkg "sys-fs/udev", ensure => "absent";
+			pkg "virtual/udev", ensure => "absent";
+		}
 
 		if (is_symlink("/etc/portage/make.profile")) {
 			unlink("/etc/portage/make.profile");
