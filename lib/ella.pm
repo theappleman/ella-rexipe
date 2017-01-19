@@ -64,10 +64,27 @@ task "hostname", group => "servers", make {
 		content => connection->server;
 };
 
-desc "Get MBR partition scheme";
+desc "Expand last partition to max";
 task "fdisk", group => "servers", make {
-	file "/root/mmcblk0.mbr",
-		content => (run "sfdisk --dump /dev/mmcblk0").join("\n");
+	my @fdisk = run "fdisk -l /dev/mmcblk0";
+	my @disk = split " ", $fdisk[0];
+	my $sectors = $disk[6];
+	my @part = split " ", pop @fdisk;
+	my ($start, $end) = ($part[1], $part[3]);
+
+	my $eDiff = ($sectors - $start);
+	my $rDiff = (($sectors - $start) - $end);
+
+	unless ($rDiff == 0) {
+		my @sfdisk = run "sfdisk --dump /dev/mmcblk0";
+		my $sfdisk = join "\n", @sfdisk;
+		file "/root/mmcblk0.mbr",
+			content => $sfdisk =~ s/$sectors/$eDiff/r;
+
+		run "sfdisk --force /dev/mmcblk0 < /root/mmcblk0.mbr";
+		run "partx -u /dev/mmcblk0";
+		run "resize2fs /dev/mmcblk0p2";
+	}
 };
 
 1;
