@@ -2,6 +2,7 @@ package kexec;
 
 use Rex -base;
 
+desc "Setup kexec-target";
 task "setup", make {
 	pkg "kexec-tools", ensure => "present";
 
