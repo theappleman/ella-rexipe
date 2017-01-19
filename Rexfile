@@ -11,7 +11,7 @@ set parallelism => "max";
 set -keyauth;
 
 # put your server in this group
-set group => "servers" => "ella[0..3].0xdc.host";
+set group => "servers" => "ella[1..3].0xdc.host", "ella0.0xdc.host" => { platform => "hdmi"};
 
 task "root", make {
 	my $user = run "whoami";
