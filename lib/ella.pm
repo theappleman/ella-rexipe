@@ -1,6 +1,7 @@
 package ella;
 
 use Rex -base;
+use Rex::Commands::SCM;
 
 desc "Get uptime of server";
 task "uptime", group => 'servers', sub {
@@ -85,6 +86,23 @@ task "fdisk", group => "servers", make {
 		run "partx -u /dev/mmcblk0";
 		run "resize2fs /dev/mmcblk0p2";
 	}
+};
+
+set repository => "epython",
+	url => "https://github.com/mesham/epython";
+
+desc "Install epython interpreter";
+task "epython", group => "servers", make {
+	pkg "dev-vcs/git", ensure => "present";
+	checkout "epython",
+		on_change => sub {
+			run "make CC=armv7a-hardfloat-linux-gnueabi-gcc",
+				cwd => "/usr/src/epython";
+		},
+		path => "/usr/src/epython";
+	run "make CC=armv7a-hardfloat-linux-gnueabi-gcc",
+		cwd => "/usr/src/epython",
+		creates => "/usr/src/epython/epython-host";
 };
 
 1;
