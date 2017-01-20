@@ -74,4 +74,5 @@ task "update", group => "servers", make {
 require Rex::Test;
 require ella;
 require kexec;
+require portage;
 
