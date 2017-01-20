@@ -29,7 +29,7 @@ task "root", make {
 	}
 }, { dont_register => TRUE };
 
-desc "Run a shell command";
+desc "Run a shell command (--shell=)";
 task "shell", group => "servers", make {
 	my $params = shift;
 
