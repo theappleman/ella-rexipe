@@ -41,7 +41,8 @@ task "shell", group => "servers", make {
 	run $cmd, sub {
 		my ($stdout, $stderr) = @_;
 		my $server = Rex::get_current_connection()->{server};
-		say "[$server] $stdout\n";
+		say "[$server] $cmd => $stdout\n";
+		say "[$server] => $stderr\n";
 	}
 };
 
