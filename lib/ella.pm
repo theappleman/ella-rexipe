@@ -43,11 +43,11 @@ task "systemd", group => 'servers', make {
 
 	symlink '/usr/lib/systemd/system/sshd.service',
 		'/etc/systemd/system/multi-user.target.wants/sshd.service';
-	symlink '/usr/lib/systemd/system/serial-getty@.service',
-		'/etc/systemd/system/getty.target.wants/serial-getty@ttyPS0.service';
 
 	file "/etc/systemd/network/eth0.network",
 		content => template('@eth0');
+	file "/etc/udev/rules.d/20-stty.rules",
+		content => template('@stty.rules');
 };
 
 desc "Set the date from the local system";
@@ -119,4 +119,8 @@ Name=eth0
 
 [Network]
 DHCP=yes
+@end
+
+@stty.rules
+SUBSYSTEM=="tty", ACTION=="add", TAG+="systemd", ENV{SYSTEMD_WANTS}+="getty@$name.service", ATTRS{type}=="4"
 @end
