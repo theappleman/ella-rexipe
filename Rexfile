@@ -36,7 +36,7 @@ task "shell", group => "servers", make {
 	if (defined($params->{root})) {
 		needs main "root" || die "Could not elevate privileges";
 	}
-	my $cmd = (defined($params->{shell})) ? $params->{shell} : "whoami";
+	my $cmd = $params->{shell} ne 1 ? $params->{shell} : "whoami";
 
 	run $cmd, sub {
 		my ($stdout, $stderr) = @_;
