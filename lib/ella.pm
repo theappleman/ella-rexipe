@@ -3,11 +3,6 @@ package ella;
 use Rex -base;
 use Rex::Commands::SCM;
 
-desc "Get uptime of server";
-task "uptime", group => 'servers', sub {
-   say connection->server . ": " . run "uptime";
-};
-
 desc "Convert to systemd";
 task "systemd", group => 'servers', make {
 	if ( is_installed("systemd") ) {

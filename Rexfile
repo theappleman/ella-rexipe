@@ -30,7 +30,7 @@ task "root", make {
 }, { dont_register => TRUE };
 
 desc "Run a shell command (--shell=)";
-task "shell", group => "servers", make {
+task "shell", make {
 	my $params = shift;
 
 	if (defined($params->{root})) {
@@ -47,7 +47,7 @@ task "shell", group => "servers", make {
 };
 
 desc "Install a package";
-task "install", group=> "servers", make {
+task "install", make {
 	needs main "root" || die "Could not elevate privileges";
 	my $params = shift;
 	my $pkg = (defined($params->{pkg})) ? $params->{pkg} : die("No package given");
@@ -56,7 +56,7 @@ task "install", group=> "servers", make {
 };
 
 desc "Update package directory";
-task "sync", group => "servers", make {
+task "sync", make {
 	parallelism '1';
 
 	needs main "root" || die "Could not gain root privileges";
@@ -64,11 +64,15 @@ task "sync", group => "servers", make {
 };
 
 desc "Update system packages";
-task "update", group => "servers", make {
+task "update", make {
 	needs main "root" || die "Could not gain root privileges";
 	update_system;
 };
 
+desc "Get uptime of server";
+task "uptime", sub {
+   say connection->server . ": " . run "uptime";
+};
 
 # now load every module via ,,require''
 require Rex::Test;
