@@ -54,6 +54,12 @@ task "sync", group => "servers", make {
 	service "portage-sync.timer", ensure => "started";
 };
 
+desc "Fix perl issues";
+task "perl", group => "servers", make {
+	needs main "root" || die "Cannot gain root access";
+	run "(qlist -IC 'virtual/perl-*'; qlist -IC 'dev-perl/*') | xargs emerge -1 dev-lang/perl";
+};
+
 1;
 
 __DATA__
