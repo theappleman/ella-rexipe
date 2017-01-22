@@ -5,6 +5,8 @@ use Rex::Commands::SCM;
 
 desc "Convert to systemd";
 task "systemd", group => 'servers', make {
+	my $params = shift;
+
 	if ( is_installed("systemd") ) {
 		say "systemd is installed";
 	} else {
@@ -13,7 +15,7 @@ task "systemd", group => 'servers', make {
 			pkg "virtual/udev", ensure => "absent";
 		}
 
-		if (is_symlink("/etc/portage/make.profile")) {
+		if ($params->{profile} && is_symlink("/etc/portage/make.profile")) {
 			unlink("/etc/portage/make.profile");
 			file "/etc/portage/make.profile",
 				ensure => "directory";
@@ -22,7 +24,7 @@ task "systemd", group => 'servers', make {
 		}
 		pkg "sys-apps/systemd", ensure => "latest";
 	}
-	if (!is_symlink("/sbin/init")) {
+	if ($params->{init} && !is_symlink("/sbin/init")) {
 		rename "/sbin/init", "/sbin/init.openrc";
 		symlink "/usr/lib/systemd/systemd", "/sbin/init";
 	}
