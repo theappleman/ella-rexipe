@@ -22,7 +22,7 @@ task "systemd", group => 'servers', make {
 			file "/etc/portage/make.profile/parent",
 				content => template('@profile');
 		}
-		pkg "sys-apps/systemd", ensure => "latest";
+		pkg "sys-apps/systemd", ensure => "present";
 	}
 	if ($params->{init} && !is_symlink("/sbin/init")) {
 		rename "/sbin/init", "/sbin/init.openrc";
