@@ -12,6 +12,7 @@ set -keyauth;
 
 # put your server in this group
 set group => "servers" => "ella[1..3].0xdc.host", "ella0.0xdc.host" => { platform => "hdmi"};
+set group => "scw" => "51.15.142.167","212.47.245.63";
 
 task "root", make {
 	my $user = run "whoami";
@@ -79,4 +80,5 @@ require Rex::Test;
 require ella;
 require kexec;
 require portage;
+require scw;
 
