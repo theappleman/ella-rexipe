@@ -13,7 +13,7 @@ task "firstboot", groups => "scw", make {
 	Rex::Logger::info("Updating system...");
 	run 'emerge -uD @system';
 	pkg '@preserved-rebuild', ensure => "latest";
-	pkg "nss-myhostname", ensure => "absent";
+	pkg qw|nss-myhostname python:3.3 gcc:4.8.5|, ensure => "absent";
 };
 
 desc "Update gcc config to latest compiler";
