@@ -53,7 +53,7 @@ task "install", make {
 	my $params = shift;
 	my $pkg = (defined($params->{pkg})) ? $params->{pkg} : die("No package given");
 
-	pkg $pkg, ensure => "latest";
+	pkg $pkg, ensure => ($params->{state} || "latest");
 };
 
 desc "Update package directory";
