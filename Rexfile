@@ -81,4 +81,5 @@ require ella;
 require kexec;
 require portage;
 require scw;
+require overlay;
 
