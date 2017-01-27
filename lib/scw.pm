@@ -30,4 +30,28 @@ task "binpkg", groups => "scw", make {
 		'FEATURES="$FEATURES buildpkg binpkg-multi-instance"';
 };
 
+desc "nginx vhost for serving packages";
+task "vhost", groups => "scw", make {
+	file "/etc/nginx/conf.d/packages.conf",
+		ensure => "absent";
+	file "/etc/nginx/vhosts.d/packages.conf",
+		on_change => sub { service nginx => "reload" },
+		content => template('@pkgs');
+};
+
 1;
+
+__DATA__
+
+@pkgs
+server {
+	listen 0.0.0.0:80;
+	server_name _;
+
+	location / {
+		alias /usr/portage/packages/;
+	}
+
+	include acme-challenge.conf;
+}
+@end
