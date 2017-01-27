@@ -45,6 +45,9 @@ task "systemd", group => 'servers', make {
 		content => template('@eth0');
 	file "/etc/udev/rules.d/20-stty.rules",
 		content => template('@stty.rules');
+
+	append_if_no_such_line "/etc/pam.d/system-login",
+		"-session        optional        pam_systemd.so";
 };
 
 desc "Set the date from the local system";
