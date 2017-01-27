@@ -15,7 +15,8 @@ task "systemd", group => 'servers', make {
 			pkg "virtual/udev", ensure => "absent";
 		}
 
-		if ($params->{profile} && is_symlink("/etc/portage/make.profile")) {
+		if ($params->{set_profile} && is_symlink("/etc/portage/make.profile")) {
+			Rex::Logger::info("Updating profile...");
 			unlink("/etc/portage/make.profile");
 			file "/etc/portage/make.profile",
 				ensure => "directory";
