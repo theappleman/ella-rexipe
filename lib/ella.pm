@@ -11,7 +11,7 @@ task "systemd", group => 'servers', make {
 		say "systemd is installed";
 	} else {
 		if (is_installed("sys-fs/udev") || is_installed("sys-fs/eudev")) {
-			pkg qw|sys-fs/udev sys-fs/eudev|, ensure => "absent";
+			pkg [qw|sys-fs/udev sys-fs/eudev|], ensure => "absent";
 			pkg "virtual/udev", ensure => "absent";
 		}
 
