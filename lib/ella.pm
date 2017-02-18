@@ -80,10 +80,10 @@ task "fdisk", group => "servers", make {
 	unless ($rDiff == 0) {
 		my @sfdisk = run "sfdisk --dump /dev/mmcblk0";
 		my $sfdisk = join "\n", @sfdisk;
-		file "/root/mmcblk0.mbr",
+		file "/tmp/mmcblk0.mbr",
 			content => $sfdisk =~ s/$sectors/$eDiff/r;
 
-		run "sfdisk --force /dev/mmcblk0 < /root/mmcblk0.mbr";
+		run "sfdisk --force /dev/mmcblk0 < /tmp/mmcblk0.mbr";
 		run "partx -u /dev/mmcblk0";
 		run "resize2fs /dev/mmcblk0p2";
 	}
