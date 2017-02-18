@@ -75,13 +75,16 @@ task "fdisk", group => "servers", make {
 	my ($start, $end) = ($part[1], $part[3]);
 
 	my $eDiff = ($sectors - $start);
-	my $rDiff = (($sectors - $start) - $end);
 
-	unless ($rDiff == 0) {
+	Rex::Logger::info("Total sectors: $sectors");
+	Rex::Logger::info("Expected partition sectors: $eDiff");
+	Rex::Logger::info("Current partition sectors:  $end");
+
+	unless ($end == $eDiff) {
 		my @sfdisk = run "sfdisk --dump /dev/mmcblk0";
 		my $sfdisk = join "\n", @sfdisk;
 		file "/tmp/mmcblk0.mbr",
-			content => $sfdisk =~ s/$sectors/$eDiff/r;
+			content => $sfdisk =~ s/$end/$eDiff/r;
 
 		run "sfdisk --force /dev/mmcblk0 < /tmp/mmcblk0.mbr";
 		run "partx -u /dev/mmcblk0";
