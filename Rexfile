@@ -74,6 +74,22 @@ task "uptime", sub {
    say connection->server . ": " . run "uptime";
 };
 
+task "sys", make {
+	my $params = shift;
+	my $sys = $params->{sys};
+	if ($sys eq "proc") {
+		use Rex::Inventory::Proc;
+		use Data::Dumper;
+		say(Dumper(Rex::Inventory::Proc->new));
+	} elsif ($sys ne 1) {
+		my %sysinf = get_system_information;
+		my $server = connection->server;
+		say "[$server] $sys=$sysinf{$sys}";
+	} else {
+		dump_system_information;
+	}
+};
+
 # now load every module via ,,require''
 require Rex::Test;
 require ella;
