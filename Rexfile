@@ -96,6 +96,7 @@ require ella;
 require kexec;
 require portage;
 require scw;
+require dev;
 require overlay;
 
 desc "Minimal setup to upgrade scaleway servers";
