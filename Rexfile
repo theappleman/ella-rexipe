@@ -98,3 +98,19 @@ require portage;
 require scw;
 require overlay;
 
+desc "Minimal setup to upgrade scaleway servers";
+batch "scw", qw|
+	scw:binpkg
+	scw:firstboot
+	portage:perl
+	overlay:install
+	overlay:profile
+	ella:systemd_keywords
+	ella:systemd
+	update
+|;
+
+desc "Run scw batch";
+task "scw", make {
+	run_batch "scw", on => connection->server, params => { profile => "0xdc:arm", init => 1 }
+};
