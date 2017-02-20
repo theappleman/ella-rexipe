@@ -54,6 +54,14 @@ task "sync", group => "servers", make {
 	service "portage-sync.timer", ensure => "started";
 };
 
+# https://wiki.gentoo.org/wiki/Handbook:AMD64/Portage/Advanced#Per-package_environment_variables
+desc "Setup per-package CFLAGS for lowmem";
+task "slow", group => "servers", make {
+	needs main "root" || die "Cannot gain root access";
+	file "/etc/portage/env",
+		ensure => "directory";
+};
+
 desc "Fix perl issues";
 task "perl", group => "servers", make {
 	needs main "root" || die "Cannot gain root access";
