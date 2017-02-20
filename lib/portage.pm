@@ -29,7 +29,7 @@ task "binhost", group => "servers", make {
 	needs main "root" || die "Cannot gain root access";
 
 	append_or_amend_line "/etc/portage/make.conf",
-		line => 'PORTAGE_BINHOST="https://armv7a.xxoo.ws/"',
+		line => 'PORTAGE_BINHOST="https://armv7a.0xdc.io/"',
 		regexp => qr{^PORTAGE_BINHOST=};
 	append_if_no_such_line "/etc/portage/make.conf",
 		line => 'FEATURES="$FEATURES getbinpkg"',
