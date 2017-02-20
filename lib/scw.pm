@@ -32,11 +32,16 @@ task "binpkg", groups => "scw", make {
 
 desc "nginx vhost for serving packages";
 task "vhost", groups => "scw", make {
-	file "/etc/nginx/conf.d/packages.conf",
-		ensure => "absent";
+	my $params = shift;
+
+	my $ssl = is_file("/var/lib/acme/live/" . $params->{host} . "/privkey");
+
 	file "/etc/nginx/vhosts.d/packages.conf",
 		on_change => sub { service nginx => "reload" },
-		content => template('@pkgs');
+		content => template('@pkgs',
+			host => $params->{host},
+			ssl => $ssl,
+		);
 };
 
 1;
@@ -46,7 +51,17 @@ __DATA__
 @pkgs
 server {
 	listen 0.0.0.0:80;
+	listen [::]:80;
+	<% if ($ssl) { %>
+        listen 0.0.0.0:443 ssl;
+        listen [::]:443 ssl;
+	ssl_certificate /var/lib/acme/live/<%= $host %>/fullchain;
+	ssl_certificate_key /var/lib/acme/live/<%= $host %>/privkey;
+	<% } elsif ($host) { %>
+	server_name <%= $host %>;
+	<% } else { %>
 	server_name _;
+	<% } %>
 
 	location / {
 		alias /usr/portage/packages/;
