@@ -10,10 +10,14 @@ task "firstboot", groups => "scw", make {
 		on_change => sub {
 			run_task "scw:gcc", on => connection->server;
 		};
+
+	delete_lines_according_to qr{(sys-apps|sys-devel|dev-lang)/.*},
+		"/var/lib/portage/world";
+
 	Rex::Logger::info("Updating system...");
 	run 'emerge -uD @system';
 	pkg '@preserved-rebuild', ensure => "latest";
-	pkg [qw|nss-myhostname python:3.3 gcc:4.8.5|], ensure => "absent";
+	pkg "nss-myhostname", ensure => "absent";
 };
 
 desc "Update gcc config to latest compiler";
