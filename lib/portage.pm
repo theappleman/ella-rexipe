@@ -2,7 +2,7 @@ package portage;
 
 use Rex -base;
 
-desc "Set gentoo-portage mirror";
+desc "Set gentoo-portage mirror (--sync_host=)";
 task "mirror", group => "servers", make {
 	needs main "root" || die "Cannot gain root access";
 
