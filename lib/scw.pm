@@ -34,7 +34,7 @@ task "binpkg", groups => "scw", make {
 		'FEATURES="$FEATURES buildpkg binpkg-multi-instance"';
 };
 
-desc "nginx vhost for serving packages";
+desc "nginx vhost for serving packages (--host=)";
 task "vhost", groups => "scw", make {
 	my $params = shift;
 
