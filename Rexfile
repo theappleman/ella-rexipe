@@ -113,5 +113,7 @@ batch "scw", qw|
 
 desc "Run scw batch";
 task "scw", make {
-	run_batch "scw", on => connection->server, params => { profile => "0xdc:arm", init => 1 }
+	my $params = shift;
+	my $arch = $params->{arch} || "arm";
+	run_batch "scw", on => connection->server, params => { profile => "0xdc:$arch", init => 1 }
 };
