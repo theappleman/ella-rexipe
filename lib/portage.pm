@@ -65,6 +65,8 @@ task "slow", group => "servers", make {
 desc "Fix perl issues";
 task "perl", group => "servers", make {
 	needs main "root" || die "Cannot gain root access";
+
+	Rex::Logger::info("Fixing perl...");
 	run "(qlist -IC 'virtual/perl-*'; qlist -IC 'dev-perl/*') | xargs emerge -1 dev-lang/perl";
 };
 
