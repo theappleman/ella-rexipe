@@ -74,6 +74,7 @@ task "uptime", sub {
    say connection->server . ": " . run "uptime";
 };
 
+desc "Get Rex system information (--sys=)";
 task "sys", make {
 	my $params = shift;
 	my $sys = $params->{sys};
