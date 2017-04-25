@@ -112,9 +112,11 @@ batch "scw", qw|
 	update
 |;
 
-desc "Run scw batch";
+desc "Run scw batch (--arch= or detect)";
 task "scw", make {
 	my $params = shift;
-	my $arch = $params->{arch} || "arm";
+	my %sysinf = get_system_information;
+	my $architecture = $sysinf{architecture};
+	my $arch = $params->{arch} || ($architecture eq 'x86_64') ? "amd64" : $architecture;
 	run_batch "scw", on => connection->server, params => { profile => "0xdc:$arch", init => 1 }
 };

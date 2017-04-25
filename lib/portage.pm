@@ -24,12 +24,24 @@ task "git", group => "servers", make {
 		content => template('@gentoogit');
 };
 
-desc "Set BINHOST";
+desc "Set BINHOST (--arch= or detect)";
 task "binhost", group => "servers", make {
 	needs main "root" || die "Cannot gain root access";
 
+	my %sysinf = get_system_information;
+	my $architecture = $sysinf{architecture};
+	my $arch;
+	if (defined $params->{arch}) {
+		$arch = $params->{arch}
+	} elsif ($architecture eq 'x86_64') {
+		$arch = "amd64"
+	} elsif ($architecture eq "arm") {
+		$arch = "armv7a"
+	} else {
+		die "Unsupported architecture: $architecture"
+	}
 	append_or_amend_line "/etc/portage/make.conf",
-		line => 'PORTAGE_BINHOST="https://armv7a.0xdc.io/"',
+		line => 'PORTAGE_BINHOST="https://'.$arch.'.0xdc.io/"',
 		regexp => qr{^PORTAGE_BINHOST=};
 	append_if_no_such_line "/etc/portage/make.conf",
 		line => 'FEATURES="$FEATURES getbinpkg"',
