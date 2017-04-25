@@ -15,6 +15,14 @@ task "systemd", group => 'servers', make {
 			pkg [qw|virtual/udev virtual/dev-manager|], ensure => "absent";
 		}
 
+		unless (is_installed("sys-apps/pciutils")) {
+			Rex::Logger::info("Installing pciutils[-udev]", "warn");
+			run "emerge -1 sys-apps/pciutils",
+				env => {
+					USE => "-udev"
+				}
+		}
+
 		if ($params->{set_profile} && is_symlink("/etc/portage/make.profile")) {
 			Rex::Logger::info("Updating profile...");
 			unlink("/etc/portage/make.profile");
