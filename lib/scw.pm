@@ -56,21 +56,27 @@ __DATA__
 server {
 	listen 0.0.0.0:80;
 	listen [::]:80;
-	<% if ($ssl) { %>
-        listen 0.0.0.0:443 ssl;
-        listen [::]:443 ssl;
+	include acme-challenge.conf;
+
+<% if ($ssl) { %>
+	server_name <%= $host %>;
+	return 301 https://<%= $host %>$request_uri;
+}
+
+server {
+	listen 0.0.0.0:443 ssl http2;
+	listen [::]:443 ssl http2;
+	server_name <%= $host %>;
 	ssl_certificate /var/lib/acme/live/<%= $host %>/fullchain;
 	ssl_certificate_key /var/lib/acme/live/<%= $host %>/privkey;
-	<% } elsif ($host) { %>
+<% } elsif ($host) { %>
 	server_name <%= $host %>;
-	<% } else { %>
+<% } else { %>
 	server_name _;
-	<% } %>
+<% } %>
 
 	location / {
 		alias /usr/portage/packages/;
 	}
-
-	include acme-challenge.conf;
 }
 @end
