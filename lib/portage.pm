@@ -28,6 +28,7 @@ desc "Set BINHOST (--arch= or detect)";
 task "binhost", group => "servers", make {
 	needs main "root" || die "Cannot gain root access";
 
+	my $params = shift;
 	my %sysinf = get_system_information;
 	my $architecture = $sysinf{architecture};
 	my $arch;
