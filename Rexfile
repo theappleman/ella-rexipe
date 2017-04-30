@@ -117,6 +117,16 @@ task "scw", make {
 	my $params = shift;
 	my %sysinf = get_system_information;
 	my $architecture = $sysinf{architecture};
-	my $arch = $params->{arch} || ($architecture eq 'x86_64') ? "amd64" : $architecture;
+	my $arch;
+	if (defined $params->{arch}) {
+		$arch = $params->{arch}
+	} elsif ($architecture eq 'x86_64') {
+		$arch = "amd64"
+	} elsif ($architecture eq 'armv7l') {
+		$arch = "arm"
+	} else {
+		die "Unsupported architecture $architecture"
+	}
+	Rex::Logger::info("Detected architecture $arch", "warn");
 	run_batch "scw", on => connection->server, params => { profile => "0xdc:$arch", init => 1 }
 };
