@@ -32,6 +32,8 @@ desc "Configure the building of binpkgs";
 task "binpkg", groups => "scw", make {
 	append_if_no_such_line "/etc/portage/make.conf",
 		'FEATURES="$FEATURES buildpkg binpkg-multi-instance"';
+	append_if_no_such_line "/etc/portage/make.conf",
+		q|EMERGE_DEFAULT_OPTS="$EMERGE_DEFAULT_OPTS --buildpkg-exclude 'virtual/* sys-kernel/*-sources sys-devel/gcc sys-devel/libtool'"|;
 };
 
 desc "nginx vhost for serving packages (--host=)";
