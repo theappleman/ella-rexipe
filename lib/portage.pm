@@ -73,6 +73,12 @@ task "slow", group => "servers", make {
 	needs main "root" || die "Cannot gain root access";
 	file "/etc/portage/env",
 		ensure => "directory";
+	file "/etc/portage/env/extreme-slow",
+		content => qq|CFLAGS="\$CFLAGS --param ggc-min-expand=0 --param ggc-min-heapsize=4096 -fno-inline"\nCXXFLAGS="\$CFLAGS"|;
+	file "/etc/portage/env/medium-slow",
+		content => qq|CFLAGS="\$CFLAGS --param ggc-min-expand=10 --param ggc-min-heapsize=8192"\nCXXFLAGS="\$CFLAGS"|;
+	file "/etc/portage/env/light-slow",
+		content => qq|CFLAGS="\$CFLAGS --param ggc-min-expand=20 --param ggc-min-heapsize=32768"\nCXXFLAGS="\$CFLAGS"|;
 };
 
 desc "Fix perl issues";
