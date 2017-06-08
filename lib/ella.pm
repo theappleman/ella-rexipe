@@ -120,13 +120,10 @@ task "epython", group => "servers", make {
 desc "Add systemd required keywords for modernness";
 task "systemd_keywords", make {
 	run_task "dev:dotd", on => connection->server, params => { conf => "/etc/portage/package.accept_keywords",
-		line => "=sys-libs/libseccomp-2.3.1",
+		line => "=sys-libs/libseccomp-2.3.2 ~arm",
 	};
 	run_task "dev:dotd", on => connection->server, params => { conf => "/etc/portage/package.accept_keywords",
-		line => "=sys-apps/systemd-233-r1",
-	};
-	run_task "dev:dotd", on => connection->server, params => { conf => "/etc/portage/package.accept_keywords",
-		line => "=sys-apps/util-linux-2.28.2 ~arm",
+		line => "=sys-apps/systemd-233-r1 ~arm",
 	};
 };
 
