@@ -101,6 +101,18 @@ require scw;
 require dev;
 require overlay;
 
+desc "Upgrade armv7a stage3 to systemd";
+batch "ella", qw|
+	ella:date
+	ella:fdisk
+	ella:hostname
+	portage:perl
+	overlay:install
+	overlay:profile
+	ella:systemd_keywords
+	ella:systemd
+|;
+
 desc "Minimal setup to upgrade scaleway servers";
 batch "scw", qw|
 	scw:binpkg
