@@ -109,7 +109,6 @@ batch "ella", qw|
 	portage:perl
 	overlay:install
 	overlay:profile
-	ella:systemd_keywords
 	ella:systemd
 |;
 
@@ -120,7 +119,6 @@ batch "scw", qw|
 	portage:perl
 	overlay:install
 	overlay:profile
-	ella:systemd_keywords
 	ella:systemd
 	update
 |;

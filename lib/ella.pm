@@ -117,16 +117,6 @@ task "epython", group => "servers", make {
 		creates => "/usr/src/epython/epython-host";
 };
 
-desc "Add systemd required keywords for modernness";
-task "systemd_keywords", make {
-	run_task "dev:dotd", on => connection->server, params => { conf => "/etc/portage/package.accept_keywords",
-		line => "=sys-libs/libseccomp-2.3.2 ~arm",
-	};
-	run_task "dev:dotd", on => connection->server, params => { conf => "/etc/portage/package.accept_keywords",
-		line => "=sys-apps/systemd-233-r1 ~arm",
-	};
-};
-
 1;
 
 __DATA__
