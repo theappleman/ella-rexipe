@@ -3,6 +3,11 @@ package ella;
 use Rex -base;
 use Rex::Commands::SCM;
 
+desc "Early util-linux update";
+task "early_utillinux", make {
+	pkg "util-linux", ensure => "latest";
+};
+
 desc "Convert to systemd";
 task "systemd", group => 'servers', make {
 	my $params = shift;

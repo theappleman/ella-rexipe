@@ -108,6 +108,7 @@ batch "ella", qw|
 	ella:hostname
 	portage:perl
 	overlay:install
+	ella:early_utillinux
 	overlay:profile
 	ella:systemd
 |;
