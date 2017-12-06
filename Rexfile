@@ -113,6 +113,11 @@ batch "ella", qw|
 	ella:systemd
 |;
 
+desc "Run ella batch";
+task "ella", group => 'servers', make {
+	run_batch "ella", on => connection->server, params => { profile => "0xdc:arm", init => 1 }
+};
+
 desc "Minimal setup to upgrade scaleway servers";
 batch "scw", qw|
 	scw:binpkg
