@@ -13,7 +13,7 @@ task "systemd", group => 'servers', make {
 	my $params = shift;
 
 	if ( is_installed("systemd") ) {
-		say "systemd is installed";
+		Rex::Logger::info("systemd is installed", "warn");
 	} else {
 		if (is_installed("sys-fs/udev") || is_installed("sys-fs/eudev")) {
 			pkg [qw|sys-fs/udev sys-fs/eudev|], ensure => "absent";
@@ -29,7 +29,7 @@ task "systemd", group => 'servers', make {
 		}
 
 		if ($params->{set_profile} && is_symlink("/etc/portage/make.profile")) {
-			Rex::Logger::info("Updating profile...");
+			Rex::Logger::info("Updating profile...", "warn");
 			unlink("/etc/portage/make.profile");
 			file "/etc/portage/make.profile",
 				ensure => "directory";
@@ -89,9 +89,9 @@ task "fdisk", group => "servers", make {
 
 	my $eDiff = ($sectors - $start);
 
-	Rex::Logger::info("Total sectors: $sectors");
-	Rex::Logger::info("Expected partition sectors: $eDiff");
-	Rex::Logger::info("Current partition sectors:  $end");
+	Rex::Logger::info("Total sectors: $sectors", "warn");
+	Rex::Logger::info("Expected partition sectors: $eDiff", "warn");
+	Rex::Logger::info("Current partition sectors:  $end", "warn");
 
 	unless ($end == $eDiff) {
 		my @sfdisk = run "sfdisk --dump /dev/mmcblk0";
