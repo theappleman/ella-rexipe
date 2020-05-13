@@ -12,11 +12,11 @@ task "install", make {
 	pkg "dev-vcs/git", ensure => "present";
 
 	checkout "0xdc",
-		path => "/usr/local/0xdc-overlay";
+		path => "/var/db/repos/0xdc";
 	file "/etc/portage/repos.conf",
 		ensure => "directory";
 	file "/etc/portage/repos.conf/0xdc.conf",
-		content => cat "/usr/local/0xdc-overlay/metadata/repos.conf";
+		content => cat "/var/db/repos/0xdc/metadata/repos.conf";
 };
 
 desc "Set a profile";

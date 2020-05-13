@@ -97,7 +97,7 @@ __DATA__
 main-repo = gentoo
 
 [gentoo]
-location = /usr/portage
+location = /var/db/repos/gentoo
 sync-type = git
 sync-uri = https://github.com/gentoo/gentoo
 auto-sync = yes
